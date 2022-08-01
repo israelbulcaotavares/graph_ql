@@ -4,6 +4,14 @@ const typeDefs = gql`
 
     scalar Date
 
+    type Produto{
+        nome: String!
+        preco: Float!
+        desconto: Float
+        precoComDesconto: Float
+
+    }
+
     type Usuario {
         id: ID
         nome: String!
@@ -18,14 +26,26 @@ const typeDefs = gql`
         ola: String!
         horaAtual: Date! 
         usuarioLogado: Usuario
+        produtoEmDestaque: Produto
     }
 `
 
 const resolvers = {
-    Usuario:{
-        salario(usuario){
-           return usuario.salario_real
+
+    Produto: {
+        precoComDesconto(produto) {
+            if (produto.desconto) {
+                return produto.preco
+                    * (1 - produto.desconto)
+            } else {
+                return produto.preco
+            }
         }
+    },
+    Usuario: {
+        salario(usuario) {
+            return usuario.salario_real
+        },
     },
     Query: {
         ola() {
@@ -43,6 +63,13 @@ const resolvers = {
                 idade: 23,
                 salario_real: 1234.56,
                 vip: true
+            }
+        },
+        produtoEmDestaque() {
+            return {
+                nome: 'Notebook Gamer',
+                preco: 4890.89,
+                descontoComDesconto: 0.15
             }
         }
 
