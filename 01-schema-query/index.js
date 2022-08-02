@@ -10,17 +10,20 @@ const usuarios =[{
     id: 1,
     nome: 'Joao Silva',
     email : 'jsilva@zemail.com',
-    idade: 29
+    idade: 29,
+    perfil_id: 1
 },{
     id:2,
     nome:'Rafael Junior',
     email: 'rafajun@wgmail.com',
-    idade:31
+    idade:31,
+    perfil_id: 2
 },{
     id:3,
     nome:'Daniela Smith',
     email: 'danismi@umail.com',
-    idade:24
+    idade:24,
+    perfil_id: 1
 }]
 
 const typeDefs = gql`
@@ -48,6 +51,7 @@ const typeDefs = gql`
         idade: Int 
         salario: Float
         vip: Boolean
+        perfil: Perfil
     }
 
     # Pontos de entrada da sua API!
@@ -65,6 +69,7 @@ const typeDefs = gql`
     }
 `
 
+// RESOLVERS para relacionar Tipos
 const resolvers = {
 
     Produto: {
@@ -76,13 +81,19 @@ const resolvers = {
                 return produto.preco
             }
         }
-    },
+    }, 
+
     Usuario: {
         salario(usuario) {
             return usuario.salario_real
         },
+        perfil(usuario){
+            const selecionados = perfis
+            .filter(p => p.id === usuario.perfil_id)
+            return selecionados ? selecionados[0] : null
+        }
     },
-    //Resolvers
+
     Query: {
         ola() {
             return 'Bom dia!'
